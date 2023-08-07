@@ -6,4 +6,5 @@ import lombok.Data;
 public class DispenserUsageResponse {
     private double amount;
     private double volume;
+    private String statusMessage;
 }

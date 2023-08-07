@@ -77,7 +77,7 @@ public class BeerDispenserController {
         }
     }
 
-    @GetMapping("/{dispenserId}")
+    @GetMapping("/getDispenser/{dispenserId}")
     public ResponseEntity getDispenser(@PathVariable(name = "dispenserId") long dispenserId){
         try {
             ApiResponse apiResponse = ApiResponse.builder().data(beerDispenserService.getDispenser(dispenserId))
@@ -92,6 +92,25 @@ public class BeerDispenserController {
                     .description(messageSource.getMessage("fetch.dispenser.fail.description", new Object[]{}, null))
                     .status(messageSource.getMessage("fail.status", new Object[]{}, null))
                     .title(messageSource.getMessage("fetch.dispenser.fail.title", new Object[]{}, null)).build();
+            return new ResponseEntity<>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/getLiveData")
+    public ResponseEntity getData(){
+        try {
+            ApiResponse apiResponse = ApiResponse.builder().data(beerDispenserService.getData())
+                    .description(
+                            messageSource.getMessage("fetch.dispenser.live.data.success.description", new Object[]{}, null))
+                    .status(messageSource.getMessage("success.status", new Object[]{}, null))
+                    .title(messageSource.getMessage("fetch.dispenser.live.data.success.title", new Object[]{}, null)).build();
+            return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Get of dispenser live data failed : ", e);
+            ApiResponse apiResponse = ApiResponse.builder().data(-1)
+                    .description(messageSource.getMessage("fetch.dispenser.live.data.fail.description", new Object[]{}, null))
+                    .status(messageSource.getMessage("fail.status", new Object[]{}, null))
+                    .title(messageSource.getMessage("fetch.dispenser.live.data.fail.title", new Object[]{}, null)).build();
             return new ResponseEntity<>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
